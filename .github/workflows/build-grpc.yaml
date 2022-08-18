@@ -33,12 +33,8 @@ jobs:
             apt-get install -y build-essential autoconf libtool pkg-config git python3.9
             
             #Building grpc
-            git clone https://github.com/grpc/grpc.git
-            cd grpc
-            git submodule update --init
-            git checkout tags/v1.48.0
-            python3 install --upgrade pip
-            pip3 install grpcio==1.48.0 -t "/artifacts/"
+            python install --upgrade pip
+            pip install grpcio==1.48.0 -t "/artifacts/"
             echo '::set-output name=RELEASE::v1.48.0'
             
             
