@@ -30,7 +30,7 @@ jobs:
       
           run: |
             apt-get update -y
-            apt-get install -y build-essential autoconf libtool pkg-config
+            apt-get install -y build-essential autoconf libtool pkg-config git
             
             #Building grpc
             git clone https://github.com/grpc/grpc.git
