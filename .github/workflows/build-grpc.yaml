@@ -30,11 +30,13 @@ jobs:
       
           run: |
             apt-get update -y
-            apt-get install -y build-essential autoconf libtool pkg-config git python3.9
+            apt-get install -y build-essential autoconf libtool pkg-config git software-properties-common
+            add-apt-repository ppa:deadsnakes/ppa
+            apt-get install python3.9
             
             #Building grpc
-            python install --upgrade pip
-            pip install grpcio==1.48.0 -t "/artifacts/"
+            python3 install --upgrade pip
+            pip3 install grpcio==1.48.0 -t "/artifacts/"
             echo '::set-output name=RELEASE::v1.48.0'
             
             
