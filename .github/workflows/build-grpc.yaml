@@ -1,0 +1,56 @@
+name: Build grpc on Power
+
+on:
+  push:
+    branches:
+      - ppc-support
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: uraimo/run-on-arch-action@v2.2.0
+        name: Install dependencies and build grpc
+        id: build
+        with:
+          arch: ppc64le
+          distro: ubuntu20.04
+          
+          # Create an artifacts directory
+          setup: |
+            mkdir -p "${PWD}/artifacts"
+          
+          # Mount the artifacts directory as /artifacts in the container
+          dockerRunArgs: |
+            --volume "${PWD}/artifacts:/artifacts"
+            
+      
+          run: |
+            apt-get update -y
+            apt-get install -y build-essential autoconf libtool pkg-config
+            
+            #Building grpc
+            git clone https://github.com/grpc/grpc.git
+            cd grpc
+            git submodule update --init
+            git checkout tags/v1.48.0
+            pip3 install grpcio==1.48.0 -t "/artifacts/"
+            echo '::set-output name=RELEASE::v1.48.0'
+            
+            
+                      
+      - name: Create Release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.build.outputs.RELEASE }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+          artifacts: ./artifacts/grpcio-${{ steps.build.outputs.RELEASE }}
+          name: ${{ steps.build.outputs.RELEASE }}
+          replacesArtifacts: true
+          draft: false
+          prerelease: false 
