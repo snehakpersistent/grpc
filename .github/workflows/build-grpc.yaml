@@ -40,8 +40,10 @@ jobs:
             pip install grpcio==1.48.0 
             echo '::set-output name=RELEASE::'$TAG
             
-            WHEEL_PATH = $(find /root/.cache/pip/wheels/ -name "gevent*.whl")
-            WHEEL_NAME = $(basename $(find /root/.cache/pip/wheels/ -name "gevent*.whl"))
+            WHEEL_PATH = $(find /root/.cache/pip/wheels/ -name "grpcio*.whl")
+            WHEEL_NAME = $(basename $(find /root/.cache/pip/wheels/ -name "grpcio*.whl"))
+            echo "WHEEL_PATH: $WHEEL_PATH"
+            echo "WHEEL_NAME: $WHEEL_NAME"
             cp $WHEEL_PATH /artifacts/$WHEEL_NAME
             echo '::set-output name=WHEEL::'$WHEEL_NAME
                       
