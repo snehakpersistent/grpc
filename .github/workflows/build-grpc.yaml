@@ -35,7 +35,7 @@ jobs:
             apt-get install python3.9 -y
             
             #Building grpc
-            python3 install --upgrade pip
+            python3 -m pip3 install --upgrade pip
             pip3 install grpcio==1.48.0 -t "/artifacts/"
             echo '::set-output name=RELEASE::v1.48.0'
             
