@@ -29,6 +29,7 @@ jobs:
             
       
           run: |
+            export TAG="v1.48.0"
             apt-get update -y
             apt-get install -y build-essential autoconf libtool pkg-config git software-properties-common
             add-apt-repository ppa:deadsnakes/ppa -y
@@ -36,10 +37,13 @@ jobs:
             
             #Building grpc
             python3 -m pip install --upgrade pip
-            pip install grpcio==1.48.0 -t "/artifacts/"
-            echo '::set-output name=RELEASE::v1.48.0'
+            pip install grpcio==1.48.0 
+            echo '::set-output name=RELEASE::'$TAG
             
-            
+            WHEEL_PATH = $(find /root/.cache/pip/wheels/ -name "gevent*.whl")
+            WHEEL_NAME = $(basename $(find /root/.cache/pip/wheels/ -name "gevent*.whl"))
+            cp $WHEEL_PATH /artifacts/$WHEEL_NAME
+            echo '::set-output name=WHEEL::'$WHEEL_NAME
                       
       - name: Create Release
         id: create_release
@@ -49,7 +53,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
           artifacts: ./artifacts/grpcio-${{ steps.build.outputs.RELEASE }}
-          name: ${{ steps.build.outputs.RELEASE }}
+          name: ${{ steps.build.outputs.WHEEL }}
           replacesArtifacts: true
           draft: false
           prerelease: false 
