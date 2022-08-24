@@ -31,12 +31,13 @@ jobs:
       
           run: |            
             apt-get update -y
-            apt-get install -y build-essential autoconf libtool pkg-config git software-properties-common
+            apt-get install -y build-essential autoconf libtool pkg-config git software-properties-common curl 
             add-apt-repository ppa:deadsnakes/ppa -y
             apt-get install python3.9 python3-pip -y
             
             #Building grpc
             python3.9 -m pip install --upgrade pip
+            curl -s https://api.github.com/repos/grpc/grpc/releases/latest | grep tag_name
             TAG=$(curl -s https://api.github.com/repos/grpc/grpc/releases/latest | grep tag_name | cut -d '"' -f4)
             echo "Building grpc $TAG"
             pip install grpcio==$TAG 
