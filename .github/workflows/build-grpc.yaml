@@ -2,17 +2,17 @@ name: Build grpc on Power
 
 on:
   workflow_call:
-  push:
-    branch:
-    - ppc-support
+    inputs:
+      release:
+        required: true
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
-      
+      - uses: actions/checkout@v2  
       - uses: uraimo/run-on-arch-action@v2.2.0
         name: Install dependencies and build grpc
         id: build
@@ -37,11 +37,8 @@ jobs:
             
             #Building grpc
             python3.9 -m pip install --upgrade pip
-            curl -s https://api.github.com/repos/grpc/grpc/releases/latest | grep tag_name
-            TAG=$(curl -s https://api.github.com/repos/grpc/grpc/releases/latest | grep tag_name | cut -d '"' -f4)
-            echo "Building grpc $TAG"
-            pip install grpcio==$TAG 
-            echo '::set-output name=RELEASE::'$TAG
+            echo "Building grpc ${{ inputs.release }}"
+            pip install grpcio==${{ inputs.release }} 
             
             WHEEL_PATH=$(find /root/.cache/pip/wheels/ -name "grpcio*.whl")
             WHEEL_NAME=$(basename $(find /root/.cache/pip/wheels/ -name "grpcio*.whl"))
@@ -51,11 +48,11 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ steps.build.outputs.RELEASE }}
+          tag: ${{ inputs.release }}
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
-          artifacts: ./artifacts/grpcio-${{ steps.build.outputs.RELEASE }}-cp39-cp39-linux_ppc64le.whl
-          name: ${{ steps.build.outputs.WHEEL }}
+          artifacts: ./artifacts/grpcio-${{ inputs.release }}-cp39-cp39-linux_ppc64le.whl
+          name: ${{ inputs.release }}
           replacesArtifacts: true
           draft: false
           prerelease: false 
