@@ -1,4 +1,4 @@
-name: Build grpc on Power
+name: Build grpc wheel on Power
 
 on:
   push:
