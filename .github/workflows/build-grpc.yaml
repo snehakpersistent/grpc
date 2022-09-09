@@ -1,6 +1,9 @@
 name: Build grpc on Power
 
 on:
+  push:
+    branch:
+      - ppc-support
   workflow_call:
     inputs:
       release:
