@@ -42,7 +42,10 @@ jobs:
             
             WHEEL_PATH=$(find /root/.cache/pip/wheels/ -name "grpcio*.whl")
             WHEEL_NAME=$(basename $(find /root/.cache/pip/wheels/ -name "grpcio*.whl"))
-            cp $WHEEL_PATH /artifacts/$WHEEL_NAME           
+            echo $WHEEL_PATH
+            echo $WHEEL_NAME
+            cp $WHEEL_PATH /artifacts/$WHEEL_NAME
+            ls /artifacts/            
                       
       - name: Create Release
         id: create_release
